@@ -16,7 +16,7 @@ namespace Domain
         {
             #region Validations
 
-            //check a minimum and a maximum for the planet size, to avoid incorrect configurations.
+            //checks a minimum and a maximum for the planet size, to avoid incorrect configurations.
             if (planetSizeX > 30 || planetSizeX < 1 || planetSizeY > 30 || planetSizeY < 1)
                 throw new Exception("Invalid planet size. Each dimension should be between 1 and 30");
 
@@ -27,7 +27,7 @@ namespace Domain
                     obstacle.X < 0 ||
                     obstacle.Y > planetSizeY ||
                     obstacle.Y < 0)
-                    throw new Exception($"The following obstacle is outside the planet map: X:{obstacle.X}, Y:{obstacle.Y}");
+                    throw new Exception($"The following obstacle is outside of the planet's map: X:{obstacle.X}, Y:{obstacle.Y}");
             }
 
             #endregion

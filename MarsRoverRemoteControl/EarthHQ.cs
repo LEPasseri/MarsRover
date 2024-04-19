@@ -17,19 +17,25 @@ namespace MarsRoverRemoteControl
             this.MarsRoverController = marsRoverController;
         }
 
+        /// <summary>
+        /// Sends to the rover the initial information that are needed to know its surroundings and its location
+        /// </summary>
         public void InitializeRover()
         {
-            Console.WriteLine("Initializing Rover..");
+            Console.WriteLine("Initializing rover..");
 
             SendPlanetInformation();
 
             SendRoverLandingPosition();
-
         }
 
+
+        /// <summary>
+        /// Sends to the rover a list of commands to pilot it along the surface of the planet
+        /// </summary>
         public void ChartRoverRoute()
         {
-            Console.WriteLine("Input the Rover's route step by step, including turns. (accepted instructions: f,b,l,r - delimeter: ,)\n");
+            Console.WriteLine("Input the rover's route step by step, including turns. (accepted instructions: f,b,l,r - delimeter: ,)\n");
 
             try
             {
@@ -40,21 +46,24 @@ namespace MarsRoverRemoteControl
 
                 var routeOutcome = MarsRoverController.ChartRoute(routeSteps);
 
-                Console.WriteLine("The Rover moved succesfully along the designated route. This is it's final position:\n" +
+                Console.WriteLine("The rover moved succesfully along the designated route. This is its final position:\n" +
                     $"X: {routeOutcome.x}\n" +
-                    $"Y: {routeOutcome.x}\n" +
+                    $"Y: {routeOutcome.y}\n" +
                     $"Direction: {routeOutcome.direction}\n\n"
                     );
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write($"An error has occurred while charting the Rover's route: {ex.Message} - Try again with a different route. \n\n");
+                Console.Write($"An error has occurred while charting the rover's route: {ex.Message} - Try again with a different route. \n\n");
                 Console.ForegroundColor = ConsoleColor.White;
                 ChartRoverRoute();
             }
         }
 
+        /// <summary>
+        /// Reads the information about the planet from a configuration file, and sends it to the rover
+        /// </summary>
         private void SendPlanetInformation()
         {
             Console.WriteLine("Sending planet map with known obstacles..");
@@ -76,7 +85,7 @@ namespace MarsRoverRemoteControl
                 if (obstaclesCoordinatesConfigValue == null)
                     throw new Exception("Obstacles coordinates are not configured");
 
-                var obstacles = obstaclesCoordinatesConfigValue.Select(coordinates => new Tuple<int, int>(Convert.ToInt32(coordinates.Split(',')[0]), Convert.ToInt32(coordinates.Split(',')[1])));
+                var obstacles = obstaclesCoordinatesConfigValue.Select(coordinates => (x: Convert.ToInt32(coordinates.Split(',')[0]), y: Convert.ToInt32(coordinates.Split(',')[1])));
 
                 #endregion
 
@@ -90,22 +99,25 @@ namespace MarsRoverRemoteControl
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write($"An error has occurred while initializing the Rover: {ex.Message} - The application will now close. \n\n");
+                Console.Write($"An error has occurred while initializing the rover: {ex.Message} - The application will now close. \n\n");
                 Console.ForegroundColor = ConsoleColor.White;
                 Environment.Exit(0);
             }
         }
 
+        /// <summary>
+        /// Sends information to the rover about where it landed on the planet based on the known map
+        /// </summary>
         private void SendRoverLandingPosition()
         {
-            Console.WriteLine("Which are the Rover's landing coordinates, and which cardinal direction is it facing? (expected format: x,y,d)\n");
+            Console.WriteLine("Which are the rover's landing coordinates, and which cardinal direction is it facing? (expected format: x,y,d)\n");
 
             try
             {
                 var rawLandingPosition = Console.ReadLine()?.Split(',');
 
                 if (rawLandingPosition == null)
-                    throw new Exception("Tee landing coordinates and the direction must be provided in this format: x,y,d ");
+                    throw new Exception("The landing coordinates and the direction must be provided in this format: x,y,d ");
 
                 MarsRoverController.SetRoverLandingPosition(x: Convert.ToInt32(rawLandingPosition[0]), y: Convert.ToInt32(rawLandingPosition[1]), directionLabel: rawLandingPosition[2].ToCharArray()[0]);
 
@@ -114,7 +126,7 @@ namespace MarsRoverRemoteControl
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write($"There was an error while setting the Rover's initial position: {ex.Message} - Try again with a different value. \n\n");
+                Console.Write($"There was an error while setting the rover's initial position: {ex.Message} - Try again with a different value. \n\n");
                 Console.ForegroundColor = ConsoleColor.White;
                 SendRoverLandingPosition();
             }

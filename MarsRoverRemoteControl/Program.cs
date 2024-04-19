@@ -15,7 +15,7 @@ namespace MarsRoverRemoteControl
             while (true) 
             {
                 Console.Write("Select the operation to perform:\n" +
-                    "1 -> Chart a route for the Rover\n" +
+                    "1 -> Chart a route for the rover\n" +
                     "2 -> End the transmission\n\n" +
                     "Operation number: ");
 
